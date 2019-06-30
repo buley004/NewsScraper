@@ -65,7 +65,7 @@ app.get("/api/articles", function(req, res){
 app.get("/api/comments/:id", function(req, res){
   Article.find({
     _id: req.params.id
-  }, function(error, comments){
+  }, "comments", function(error, comments){
     if (error) {
       console.log(error);
     }
