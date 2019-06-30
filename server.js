@@ -86,7 +86,7 @@ app.get("/scrape", function (req, res) {
       // Save the text and href of each link enclosed in the current element
       var title = $(element).children(".col-xs-9").children(".headline").children("a").text();
       var url = $(element).children(".col-xs-9").children(".headline").children("a").attr("href");
-      var author = $(element).children(".col-xs-9").children(".byline").text().trim();
+      var author = $(element).children(".col-xs-9").children(".byline").text().trim().slice(3);
       var date = $(element).children(".col-xs-9").children(".article-post-date").text();
 
       Article.create({
