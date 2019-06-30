@@ -36,13 +36,44 @@ var newsSchema = mongoose.Schema({
   title: { type: String, unique: true },
   author: String,
   url: String,
-  date: String
+  date: String,
+  comments: [{comment: String, commentDate: {type: Date, default: Date.now}}]
 });
 
 var Article = db.model("Article", newsSchema);
 
 // Routes
 // ======
+//index route
+app.get("/", function(req, res) {
+  res.sendFile(path.join(__dirname + "./public/index.html"));
+});
+
+//api route to return articles
+app.get("/api/articles", function(req, res){
+  Article.find({}, function(error, found) {
+    if (error) {
+      console.log(error);
+    }
+    else {
+      res.json(found);
+    }
+  });
+});
+
+//return comments for a given article
+app.get("/api/comments/:id", function(req, res){
+  Article.find({
+    _id: req.params.id
+  }, function(error, comments){
+    if (error) {
+      console.log(error);
+    }
+    else {
+      res.json(comments);
+    }
+  })
+})
 
 //scrape for articles
 app.get("/scrape", function (req, res) {
