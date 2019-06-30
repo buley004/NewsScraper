@@ -25,15 +25,15 @@ mongoose.connect(MONGODB_URI);
 
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function() {
+db.once('open', function () {
   // we're connected!
   console.log("it worked!");
-  
+
 });
 
 //set up db schema
 var newsSchema = mongoose.Schema({
-  title: String,
+  title: { type: String, unique: true },
   author: String,
   url: String,
   date: String
@@ -45,22 +45,34 @@ var Article = db.model("Article", newsSchema);
 // ======
 
 //scrape for articles
-app.get("/scrape", function(req, res) {
+app.get("/scrape", function (req, res) {
   // Make a request via axios for the news section of `ycombinator`
-  axios.get("https://www.thestranger.com/news").then(function(response) {
+  axios.get("https://www.thestranger.com/news").then(function (response) {
     // Load the html body from axios into cheerio
     var $ = cheerio.load(response.data);
     // For each element with a "title" class
-    $(".section-article").each(function(i, element) {
+    $(".section-article").each(function (i, element) {
       // Save the text and href of each link enclosed in the current element
       var title = $(element).children(".col-xs-9").children(".headline").children("a").text();
       var url = $(element).children(".col-xs-9").children(".headline").children("a").attr("href");
       var author = $(element).children(".col-xs-9").children(".byline").text().trim();
       var date = $(element).children(".col-xs-9").children(".article-post-date").text();
-      console.log(title);
-      console.log(url);
-      console.log(author);
-      console.log(date);
+
+      Article.create({
+        title: title,
+        url: url,
+        author: author,
+        date: date
+      }, function (err, inserted) {
+        if (err) {
+          // Log the error if one is encountered during the query
+          console.log(err);
+        }
+        else {
+          // Otherwise, log the inserted data
+          console.log(inserted);
+        }
+      });
 
     });
   });
@@ -71,6 +83,6 @@ app.get("/scrape", function(req, res) {
 
 
 // Listen on port 3000
-app.listen(3000, function() {
+app.listen(3000, function () {
   console.log("App running on port 3000!");
 });
