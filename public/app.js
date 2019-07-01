@@ -7,12 +7,14 @@ $.ajax({
     //create html elements
     var newDiv = $("<div>");
     var title = $("<h2>");
+    var link = $("<a>");
     var author = $("<p>");
     var date = $("<p>");
     var form = $("<form>").addClass("submit-btn").attr("id", data[i]._id);
 
     //add data to elements
-    title.text(data[i].title);
+    link.text(data[i].title).attr("href", data[i].url).attr("target", "_blank");
+    title.append(link);
     author.text(data[i].author);
     date.text(data[i].date);
 
