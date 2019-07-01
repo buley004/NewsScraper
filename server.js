@@ -21,7 +21,6 @@ app.use(express.static("public"));
 
 // Database configuration
 var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
-
 mongoose.connect(MONGODB_URI);
 
 var db = mongoose.connection;
@@ -29,7 +28,6 @@ db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function () {
   // we're connected!
   console.log("it worked!");
-
 });
 
 //set up db schema
@@ -78,8 +76,7 @@ app.get("/api/comments/:id", function (req, res) {
 
 //add a comment to an article
 app.post("/api/comments", function (req, res) {
-  console.log(req.body);
-
+  
   Article.findOneAndUpdate(
     { _id: req.body.id },
     { $push: { comments: { comment: req.body.comment } } },
@@ -116,18 +113,16 @@ app.get("/api/delete/:id", function (req, res) {
 
 //scrape for articles
 app.get("/scrape", function (req, res) {
-  // Make a request via axios for the news section of `ycombinator`
   axios.get("https://www.thestranger.com/news").then(function (response) {
-    // Load the html body from axios into cheerio
     var $ = cheerio.load(response.data);
-    // For each element with a "title" class
     $(".section-article").each(function (i, element) {
-      // Save the text and href of each link enclosed in the current element
+      // grab the info for each article
       var title = $(element).children(".col-xs-9").children(".headline").children("a").text();
       var url = $(element).children(".col-xs-9").children(".headline").children("a").attr("href");
       var author = $(element).children(".col-xs-9").children(".byline").text().trim().slice(3);
       var date = $(element).children(".col-xs-9").children(".article-post-date").text();
 
+      //create new db document
       Article.create({
         title: title,
         url: url,
@@ -135,11 +130,9 @@ app.get("/scrape", function (req, res) {
         date: date
       }, function (err, inserted) {
         if (err) {
-          // Log the error if one is encountered during the query
           console.log(err);
         }
         else {
-          // Otherwise, log the inserted data
           console.log(inserted);
         }
       });
