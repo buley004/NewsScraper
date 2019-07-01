@@ -1,3 +1,5 @@
+//import { log } from "util";
+
 //Get articles
 $.ajax({
   type: "GET",
@@ -24,7 +26,7 @@ $.ajax({
     }), $("<br/>"), $("<input/>", {
       type: 'submit',
       value: 'Add Comment'
-    }));
+    }), $("<button>").text("View Comments").attr("data-id", data[i]._id).addClass("view-btn"));
 
     newDiv.append(title).append(author).append(date).append(form);
     $("#article-display").append(newDiv);
@@ -35,19 +37,31 @@ $.ajax({
 $(document).on('submit', '.submit-btn', function () {
   event.preventDefault();
   
+  //check for empty comment
+  if($(this).children(".comment-text").val("")) {
+    return false;
+  }
+  
+  //data to send in post request
   var data = {
     comment: $(this).children(".comment-text").val(),
     id: $(this).attr("id")
   }
-  console.log(data);
 
   //post comment
   $.post("/api/comments", data, function(res){
     alert("Comment Posted!");
+  });
+  
+  $(this).children(".comment-text").val(""); 
+});
+
+//View comments
+$(document).on("click", ".view-btn", function(){
+  console.log($(this).attr("data-id"));
+  $.get("/api/comments/" + $(this).attr("data-id"), function(data){
+    console.log(data);
+    
   })
   
-  $(this).children(".comment-text").val("");
-  
-  
-  
-})
+});

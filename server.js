@@ -37,7 +37,7 @@ var newsSchema = mongoose.Schema({
   author: String,
   url: String,
   date: String,
-  comments: [{comment: String, commentDate: {type: Date, default: Date.now}}]
+  comments: [{ comment: String, commentDate: { type: Date, default: Date.now } }]
 });
 
 var Article = db.model("Article", newsSchema);
@@ -45,13 +45,13 @@ var Article = db.model("Article", newsSchema);
 // Routes
 // ======
 //index route
-app.get("/", function(req, res) {
+app.get("/", function (req, res) {
   res.sendFile(path.join(__dirname + "./public/index.html"));
 });
 
 //api route to return articles
-app.get("/api/articles", function(req, res){
-  Article.find({}, function(error, found) {
+app.get("/api/articles", function (req, res) {
+  Article.find({}, function (error, found) {
     if (error) {
       console.log(error);
     }
@@ -62,10 +62,10 @@ app.get("/api/articles", function(req, res){
 });
 
 //return comments for a given article
-app.get("/api/comments/:id", function(req, res){
+app.get("/api/comments/:id", function (req, res) {
   Article.find({
     _id: req.params.id
-  }, "comments", function(error, comments){
+  }, "comments", function (error, comments) {
     if (error) {
       console.log(error);
     }
@@ -76,22 +76,21 @@ app.get("/api/comments/:id", function(req, res){
 });
 
 //add a comment to an article
-app.post("/api/comments", function(req, res){
+app.post("/api/comments", function (req, res) {
   console.log(req.body);
-  
+
   Article.findOneAndUpdate(
-    {_id: req.body.id},
-    {$push: {comments: {comment: req.body.comment}}},
-    function(err, res){
+    { _id: req.body.id },
+    { $push: { comments: { comment: req.body.comment } } },
+    function (err, res) {
       if (err) {
         console.log(err);
       }
       else {
         console.log(res);
-        
       }
     }
-    );
+  );
 });
 
 //scrape for articles
