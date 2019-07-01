@@ -50,13 +50,10 @@ $(document).on('submit', '.submit-btn', function () {
   console.log(data);
 
   //post comment
-  if (comment.trim() !== "") {
-    console.log("validated");
-    
+  if (comment.trim() !== "") {  
     $.post("/api/comments", data, function (res) {
       alert("Comment Posted!");
       console.log("posted");
-
     });
   }
 
@@ -73,12 +70,25 @@ $(document).on("click", ".view-btn", function () {
     console.log(data);
     for (let i = 0; i < data[0].comments.length; i++) {
       let comment = data[0].comments[i].comment;
-      let commentDiv = $("<p>").text(comment);
-      $("#comment-display").append(commentDiv);
+      let commentDiv = $("<div>").attr("id", data[0].comments[i]._id);
+      let commentText = $("<p>").text(comment);
+      let deleteBtn = $("<button>").text("Delete Comment").attr("data-id", data[0].comments[i]._id).addClass("delete-btn");
+      $(commentDiv).append(commentText).append(deleteBtn);
+      $("#comment-display").append(commentDiv)
       console.log(comment);
-
     }
-
-  })
-
+  });
 });
+
+//Delete comment
+$(document).on("click", ".delete-btn", function(){
+  console.log($(this).attr("data-id"));
+
+  //delete from DB
+  $.get("/api/delete/" + $(this).attr("data-id"), function(response){
+    console.log("success");
+  });
+
+  //delete div
+  $("#" + $(this).attr("data-id")).remove();
+})
