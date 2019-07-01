@@ -68,14 +68,14 @@ $(document).on("click", ".view-btn", function () {
       let deleteBtn = $("<button>").text("Delete Comment").attr("data-id", data[0].comments[i]._id).addClass("delete-btn");
       $(commentDiv).append(commentText).append(deleteBtn);
       $("#comment-display").append(commentDiv);
+      $("html, body").animate({ scrollTop: ($('#comment-display').offset().top) }, "slow");
     }
   });
 });
 
 //Delete comment
 $(document).on("click", ".delete-btn", function(){
-  console.log($(this).attr("data-id"));
-
+ 
   //delete from DB
   $.get("/api/delete/" + $(this).attr("data-id"), function(response){
     console.log("success");
