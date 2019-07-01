@@ -37,7 +37,7 @@ var newsSchema = mongoose.Schema({
   author: String,
   url: String,
   date: String,
-  comments: [{ comment: String, commentDate: { type: Date, default: Date.now } }]
+  comments: [{ comment: {type: String, required: true}, commentDate: { type: Date, default: Date.now } }]
 });
 
 var Article = db.model("Article", newsSchema);

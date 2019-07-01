@@ -36,32 +36,49 @@ $.ajax({
 //Submit comment
 $(document).on('submit', '.submit-btn', function () {
   event.preventDefault();
-  
-  //check for empty comment
-  if($(this).children(".comment-text").val("")) {
-    return false;
-  }
-  
+  console.log("hello");
+  console.log($(this).children(".comment-text").val());
+  let comment = $(this).children(".comment-text").val();
+
+ 
+
   //data to send in post request
   var data = {
     comment: $(this).children(".comment-text").val(),
     id: $(this).attr("id")
   }
+  console.log(data);
 
   //post comment
-  $.post("/api/comments", data, function(res){
-    alert("Comment Posted!");
-  });
-  
-  $(this).children(".comment-text").val(""); 
+  if (comment.trim() !== "") {
+    console.log("validated");
+    
+    $.post("/api/comments", data, function (res) {
+      alert("Comment Posted!");
+      console.log("posted");
+
+    });
+  }
+
+  $(this).children(".comment-text").val("");
 });
 
 //View comments
-$(document).on("click", ".view-btn", function(){
-  console.log($(this).attr("data-id"));
-  $.get("/api/comments/" + $(this).attr("data-id"), function(data){
-    console.log(data);
-    
-  })
+$(document).on("click", ".view-btn", function () {
+  //clear other comments
+  $("#comment-display").empty();
   
+  console.log($(this).attr("data-id"));
+  $.get("/api/comments/" + $(this).attr("data-id"), function (data) {
+    console.log(data);
+    for (let i = 0; i < data[0].comments.length; i++) {
+      let comment = data[0].comments[i].comment;
+      let commentDiv = $("<p>").text(comment);
+      $("#comment-display").append(commentDiv);
+      console.log(comment);
+
+    }
+
+  })
+
 });
