@@ -4,13 +4,12 @@ $.ajax({
   url: "api/articles"
 }).then(function (data) {
   for (let i = 0; i < data.length; i++) {
-    console.log(data[i].title);
     //create html elements
     var newDiv = $("<div>");
     var title = $("<h2>");
     var author = $("<p>");
     var date = $("<p>");
-    var form = $("<form>").addClass("submit-btn");
+    var form = $("<form>").addClass("submit-btn").attr("id", data[i]._id);
 
     //add data to elements
     title.text(data[i].title);
@@ -21,11 +20,9 @@ $.ajax({
       rows: '5px',
       cols: '27px',
       type: 'text',
-      placeholder: 'Message',
       class: 'comment-text'
     }), $("<br/>"), $("<input/>", {
       type: 'submit',
-      id: data[i]._id,
       value: 'Add Comment'
     }));
 
@@ -37,9 +34,15 @@ $.ajax({
 //Submit comment
 $(document).on('submit', '.submit-btn', function () {
   event.preventDefault();
-  console.log($(this));
-  console.log("testo");
-  console.log($(this).children(".comment-text").val());
+  
+  var data = {
+    comment: $(this).children(".comment-text").val(),
+    id: $(this).attr("id")
+  }
+  console.log(data);
+  
+  $(this).children(".comment-text").val("");
+  
   
   
 })

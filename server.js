@@ -72,8 +72,24 @@ app.get("/api/comments/:id", function(req, res){
     else {
       res.json(comments);
     }
-  })
-})
+  });
+});
+
+//add a comment to an article
+app.post("/api/comments", function(req, res){
+  Article.findOneAndUpdate(
+    {_id: req.body.id},
+    {$push: {comments: req.body.comment}},
+    function(err, res){
+      if (err) {
+        console.log(err);
+      }
+      else {
+        res.json(res);
+      }
+    }
+    );
+});
 
 //scrape for articles
 app.get("/scrape", function (req, res) {
