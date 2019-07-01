@@ -8,6 +8,7 @@ var expshb = require("express-handlebars");
 var cheerio = require("cheerio");
 
 var app = express();
+var PORT = process.env.PORT || 3000;
 
 // Set the app up with morgan.
 app.use(logger("dev"));
@@ -149,7 +150,7 @@ app.get("/scrape", function (req, res) {
 });
 
 
-// Listen on port 3000
-app.listen(3000, function () {
-  console.log("App running on port 3000!");
+// Listen
+app.listen(PORT, function () {
+  console.log("App running on port " + PORT);
 });
