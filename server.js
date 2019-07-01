@@ -91,7 +91,8 @@ app.post("/api/comments", function (req, res) {
         console.log(res);
       }
     }
-  );
+    );
+    res.send(200);
 });
 
 //delete comment
