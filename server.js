@@ -111,6 +111,7 @@ app.get("/api/delete/:id", function (req, res) {
       }
     }
   )
+  res.send(200);
 })
 
 //scrape for articles
