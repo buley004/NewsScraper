@@ -40,6 +40,11 @@ $(document).on('submit', '.submit-btn', function () {
     id: $(this).attr("id")
   }
   console.log(data);
+
+  //post comment
+  $.post("/api/comments", data, function(res){
+    alert("Comment Posted!");
+  })
   
   $(this).children(".comment-text").val("");
   

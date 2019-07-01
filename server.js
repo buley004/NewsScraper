@@ -77,15 +77,18 @@ app.get("/api/comments/:id", function(req, res){
 
 //add a comment to an article
 app.post("/api/comments", function(req, res){
+  console.log(req.body);
+  
   Article.findOneAndUpdate(
     {_id: req.body.id},
-    {$push: {comments: req.body.comment}},
+    {$push: {comments: {comment: req.body.comment}}},
     function(err, res){
       if (err) {
         console.log(err);
       }
       else {
-        res.json(res);
+        console.log(res);
+        
       }
     }
     );
