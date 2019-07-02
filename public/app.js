@@ -72,7 +72,7 @@ $(document).on("click", ".view-btn", function () {
     if(data[0].comments.length > 0) {
       $("html, body").animate({ scrollTop: ($('#comment-display').offset().top) }, "slow");
     } else {
-      alert("No comments found!");
+      alert("No comments found, share your thoughts!");
     }
   });
 });
