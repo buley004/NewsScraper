@@ -5,7 +5,7 @@ $.ajax({
 }).then(function (data) {
   for (let i = 0; i < data.length; i++) {
     //create html elements
-    var newDiv = $("<div>");
+    var newDiv = $("<div>").addClass("article-box");
     var title = $("<h2>");
     var link = $("<a>");
     var author = $("<p>");
@@ -47,7 +47,7 @@ $(document).on('submit', '.submit-btn', function () {
   //post comment if not blank
   if (comment.trim() !== "") {  
     $.post("/api/comments", data, function (res) {
-      alert("Comment Posted!");
+      alert("Comment Posted! Click on 'View Comments' to see all comments from this article!");
     });
   }
   //clear text box
@@ -63,12 +63,16 @@ $(document).on("click", ".view-btn", function () {
   $.get("/api/comments/" + $(this).attr("data-id"), function (data) {
     for (let i = 0; i < data[0].comments.length; i++) {
       let comment = data[0].comments[i].comment;
-      let commentDiv = $("<div>").attr("id", data[0].comments[i]._id);
+      let commentDiv = $("<div>").attr("id", data[0].comments[i]._id).addClass("comment-box");
       let commentText = $("<p>").text(comment);
       let deleteBtn = $("<button>").text("Delete Comment").attr("data-id", data[0].comments[i]._id).addClass("delete-btn");
       $(commentDiv).append(commentText).append(deleteBtn);
       $("#comment-display").append(commentDiv);
+    }
+    if(data[0].comments.length > 0) {
       $("html, body").animate({ scrollTop: ($('#comment-display').offset().top) }, "slow");
+    } else {
+      alert("No comments found!");
     }
   });
 });
